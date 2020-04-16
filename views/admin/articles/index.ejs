@@ -1,0 +1,67 @@
+<%- include('../../partials/header.ejs') %>
+<%- include('../../partials/navbar.ejs') %>
+<div class="container">
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Index</th>
+          <th scope="col">Title</th>
+          <th scope="col">Slug</th>
+          <th scope="col">Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% articles.forEach(article => { %>
+          <tr>
+            <th> <%=article.id%> </th>
+            <td> <%=article.title%> </td>
+            <td> <%=article.slug%> </td>
+            <td>
+                <a href="/admin/article/edit/<%=article.id%>" class=" btn btn-primary" role="button">Editar</a>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-target="#warningModal" data-whatever="<%= article.id%>" data-toggle="modal">Excluir</button>
+
+            </td>
+          </tr>
+        <% }) %>
+
+    </table>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Deletar Artigo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que quer deletar o artigo?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <form class="form-inline" action="/admin/article/delete" style="display: inline" method="post">
+          <input type="hidden" name="id">
+          <button type="onsubmit button" class="btn btn-danger">Deletar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer.ejs') %>
+
+<script>
+  $('#warningModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) // Button that triggered the modal
+  var recipient = button.data('whatever') // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this)
+  modal.find('.modal-footer input').val(recipient)
+  })
+</script>
