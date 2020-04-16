@@ -2,14 +2,17 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const connection = require('./database/database');
+const session = require("express-session");
 
 //Organization and Controllers
 const categoriesController = require('./categories/CategoriesController');
 const articlesController = require('./articles/ArticlesController');
+const usersController = require('./users/UserController');
 
 //Tables and database of the routes
 const Article = require('./articles/Article');
 const Category = require('./categories/Category');
+const User = require('./users/User');
 
 //View engine
 app.set("View engine", "ejs");
@@ -21,6 +24,13 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+//Sessions
+app.use(session({
+  secret: " adkçalskdaçlsdkaçsldks ", //senha da sessão. Tem que ser aleatório,
+  cookie: { maxAge: 3000000} //(milisegundos) Tempo que a conexão do usuário com o servidor vai durar por meio de cookies
+
+}))
+
 connection
   .authenticate()
   .then(() => {
@@ -31,6 +41,7 @@ connection
 
 app.use('/', categoriesController);
 app.use('/', articlesController);
+app.use('/', usersController);
 
 app.get('/', (req, res) => {
   Article.findAll({
@@ -83,7 +94,7 @@ app.get("/category/:slug", (req, res) => {
       res.redirect("/");
     }
   }).catch(err => {
-    res.redirect("/");
+    res.r
   });
 });
 
